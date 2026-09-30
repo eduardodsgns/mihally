@@ -526,6 +526,7 @@ private struct MenuPanelHeader: View {
 
                     Spacer()
 
+                    if AppInfo.feedbackAvailable {
                     Button {
                         appDelegate()?.openFeedbackWindow()
                     } label: {
@@ -537,6 +538,7 @@ private struct MenuPanelHeader: View {
                     }
                     .buttonStyle(.plain)
                     .help(FeatureStrings.feedback(l10n.language).openButton)
+                    }
                 }
             }
         }

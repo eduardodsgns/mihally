@@ -168,6 +168,12 @@ enum ScreenshotShareCompletionTests {
         var isAvailable: Bool { self == .screenOCR ? Self.ocrAvailable : Self.available }
     }
 
+    /// Mihally (unofficial fork): hosted links are off in the shipped app;
+    /// the harness switches them on to keep exercising the upstream paths.
+    enum AppInfo {
+        static var hostedSharingAvailable = true
+    }
+
     enum ScreenshotLastCaptureStore {
         static var stored: Int? = 1
         static var isWithheld = false
@@ -409,6 +415,16 @@ enum ScreenshotShareCompletionTests {
                          && gate.writes == (scenario == "enabled" ? 1 : 0),
                          "service checks \(scenario) before persistence or any upload")
         }
+
+        SharingDefaults.standard.enabled = true
+        AppFeature.available = true
+        AppInfo.hostedSharingAvailable = false
+        let forkGate = CreationGate()
+        _ = try? await forkGate.createLink(pngData: Data([137, 80, 78, 71, 13, 10, 26, 10]),
+                                           duration: .oneHour)
+        suite.expect(forkGate.session.uploads == 0 && forkGate.writes == 0,
+                     "the fork never uploads to the upstream link host")
+        AppInfo.hostedSharingAvailable = true
         SharingDefaults.standard.enabled = true
         AppFeature.available = true
 

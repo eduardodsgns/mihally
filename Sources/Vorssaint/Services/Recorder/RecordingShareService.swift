@@ -76,7 +76,9 @@ final class RecordingShareService: ObservableObject {
     func createLink(artifact: RecorderExporter.ShareArtifact,
                     duration: RecordingShareDuration) async throws -> RecordingShareRecord {
         defer { artifact.discard() }
-        guard UserDefaults.standard.bool(forKey: DefaultsKey.recorderSharingEnabled) else {
+        // Mihally (unofficial fork): the link host belongs to the upstream author.
+        guard AppInfo.hostedSharingAvailable,
+              UserDefaults.standard.bool(forKey: DefaultsKey.recorderSharingEnabled) else {
             throw RecordingShareError.unavailable
         }
         let file = artifact.fileURL
