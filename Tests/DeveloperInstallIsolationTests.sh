@@ -21,33 +21,30 @@ signed=()
 stop_process() { stopped+=("$1"); }
 sign_installed_bundle() { signed+=("$1"); }
 
+# Mihally (unofficial fork) has no pre-rename bundles: neither variant may
+# stop, remove or overwrite any Vorssaint app, nor the other Mihally variant.
 for DEV in 1 0; do
     stopped=()
     signed=()
-    for name in Vorss 'Vorssaint Utils' Vorssaint 'Vorssaint (Developer)'; do
+    for name in Vorss 'Vorssaint Utils' Vorssaint 'Vorssaint (Developer)' Mihally 'Mihally (Developer)'; do
         mkdir -p "$install_test_dir/Applications/$name.app"
         print original > "$install_test_dir/Applications/$name.app/content"
     done
     if (( DEV )); then
-        APP_NAME='Vorssaint (Developer)'
-        EXECUTABLE=VorssaintDeveloper
+        APP_NAME='Mihally (Developer)'
+        EXECUTABLE=MihallyDeveloper
+        other='Mihally'
     else
-        APP_NAME=Vorssaint
-        EXECUTABLE=Vorssaint
+        APP_NAME=Mihally
+        EXECUTABLE=Mihally
+        other='Mihally (Developer)'
     fi
     source "$install_test_dir/install.zsh"
     [[ "$(cat "$install_test_dir/Applications/$APP_NAME.app/content")" == new ]]
     [[ "${signed[*]}" == "$install_test_dir/Applications/$APP_NAME.app" ]]
-    if (( DEV )); then
-        [[ "${stopped[*]}" == VorssaintDeveloper ]]
-        for name in Vorss 'Vorssaint Utils' Vorssaint; do
-            [[ "$(cat "$install_test_dir/Applications/$name.app/content")" == original ]]
-        done
-    else
-        [[ "${stopped[*]}" == 'Vorssaint Vorss VorssaintUtils' ]]
-        [[ ! -e "$install_test_dir/Applications/Vorss.app" ]]
-        [[ ! -e "$install_test_dir/Applications/Vorssaint Utils.app" ]]
-        [[ "$(cat "$install_test_dir/Applications/Vorssaint (Developer).app/content")" == original ]]
-    fi
+    [[ "${stopped[*]}" == "$EXECUTABLE" ]]
+    for name in Vorss 'Vorssaint Utils' Vorssaint 'Vorssaint (Developer)' "$other"; do
+        [[ "$(cat "$install_test_dir/Applications/$name.app/content")" == original ]]
+    done
 done
 print 'DEVELOPER INSTALL ISOLATION TESTS OK'
