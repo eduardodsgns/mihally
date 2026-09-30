@@ -27,7 +27,7 @@ final class UpdateService: ObservableObject {
     /// preview. Set alongside `.available`; cleared otherwise.
     @Published private(set) var availableNotes: String?
 
-    private let repository = "vorssaint/vorssaint-utils"
+    private let repository = "eduardodsgns/mihally"
     private var downloadURL: URL?
     /// Size the release advertises for the asset, used to bound the download.
     private var downloadExpectedBytes: Int64?
@@ -124,7 +124,7 @@ final class UpdateService: ObservableObject {
 
         var request = URLRequest(url: URL(string: endpoint)!)
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-        request.setValue("Vorssaint/\(AppInfo.version)", forHTTPHeaderField: "User-Agent")
+        request.setValue("Mihally/\(AppInfo.version)", forHTTPHeaderField: "User-Agent")
         request.cachePolicy = .reloadIgnoringLocalCacheData
 
         URLSession.shared.dataTask(with: request) { [weak self] data, _, error in
@@ -153,7 +153,9 @@ final class UpdateService: ObservableObject {
                 }
 
                 let candidates = releases.map { rel -> UpdateServiceSupport.ReleaseCandidate in
+                    // Mihally ships ad-hoc signed .zip releases; a .dmg is still accepted.
                     let asset = rel.assets.first { $0.name.hasSuffix(".dmg") }
+                        ?? rel.assets.first { $0.name.hasSuffix(".zip") }
                     return UpdateServiceSupport.ReleaseCandidate(
                         tagName: rel.tagName,
                         isPrerelease: rel.prerelease ?? false,
@@ -205,9 +207,21 @@ final class UpdateService: ObservableObject {
 
     // MARK: - Download & install
 
+    /// False for Mihally builds: see downloadAndInstall().
+    static let inPlaceInstallSupported = false
+
     func downloadAndInstall() {
         if AppInfo.isDeveloperBuild { return }  // never replace the local dev build over itself
         guard let downloadURL else { return }
+        // Mihally (unofficial fork) is ad-hoc signed and not notarized. The
+        // in-place installer below only accepts bundles signed by the upstream
+        // author's Developer ID, so it could never apply a Mihally release.
+        // Rather than weakening that check, send the user to the release page
+        // to download the new build by hand.
+        if !Self.inPlaceInstallSupported {
+            NSWorkspace.shared.open(AppInfo.releasesURL)
+            return
+        }
         // Pre-flight BEFORE spending the download: a translocated app or one
         // running from a read-only volume (the mounted DMG) can never be
         // replaced in place, so say so now instead of after the download.
@@ -277,7 +291,7 @@ final class UpdateService: ObservableObject {
                     }
                     // Move out of the session's scratch space before handing off.
                     let dmgURL = FileManager.default.temporaryDirectory
-                        .appendingPathComponent("Vorssaint-update.dmg")
+                        .appendingPathComponent("Mihally-update.dmg")
                     try? FileManager.default.removeItem(at: dmgURL)
                     do {
                         try FileManager.default.moveItem(at: tempURL, to: dmgURL)
@@ -505,7 +519,7 @@ final class BoundedUpdateDownloadDelegate: NSObject, URLSessionDataDelegate {
         self.progress = progress
         self.completion = completion
         let temporaryFileURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent("Vorssaint-update-\(UUID().uuidString).download")
+            .appendingPathComponent("Mihally-update-\(UUID().uuidString).download")
         fileURL = temporaryFileURL
         guard FileManager.default.createFile(atPath: temporaryFileURL.path, contents: nil) else {
             throw CocoaError(.fileWriteUnknown)

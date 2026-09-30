@@ -2129,7 +2129,7 @@ private final class TapGainEngine: GainEngine {
         }
 
         let aggregate: [String: Any] = [
-            kAudioAggregateDeviceNameKey: "Vorssaint Mixer",
+            kAudioAggregateDeviceNameKey: "Mihally Mixer",
             kAudioAggregateDeviceUIDKey: UUID().uuidString,
             kAudioAggregateDeviceIsPrivateKey: true,
             kAudioAggregateDeviceMainSubDeviceKey: outputDeviceUID,

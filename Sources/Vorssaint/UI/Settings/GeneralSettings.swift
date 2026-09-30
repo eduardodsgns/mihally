@@ -27,7 +27,9 @@ struct GeneralSettings: View {
                 if AppFeature.keepAwake.isAvailable {
                     shortcutCard
                 }
-                feedbackCard
+                if AppInfo.feedbackAvailable {
+                    feedbackCard
+                }
             }
             .frame(maxWidth: 760)
             .frame(maxWidth: .infinity)

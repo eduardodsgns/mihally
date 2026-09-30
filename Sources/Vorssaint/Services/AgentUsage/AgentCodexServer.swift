@@ -227,7 +227,7 @@ final class AgentCodexConversation {
     /// Introduces the app, as every conversation must begin.
     func start() -> Result<Void, AgentCodexServer.Failure> {
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"
-        let client: [String: Any] = ["name": "vorssaint", "title": "Vorssaint", "version": version]
+        let client: [String: Any] = ["name": "vorssaint", "title": "Mihally", "version": version]
         return ask("initialize", ["clientInfo": client, "capabilities": NSNull()])
             .flatMap { _ -> Result<Void, AgentCodexServer.Failure> in
                 send(["method": "initialized"]) ? .success(()) : .failure(.unreachable)

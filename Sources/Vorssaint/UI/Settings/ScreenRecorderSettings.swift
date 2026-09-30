@@ -152,6 +152,7 @@ struct ScreenRecordingCaptureSettings: View {
                 }
             }
 
+            if AppInfo.hostedSharingAvailable {
             Section {
                 Toggle(screenshotStrings.shareEnabledToggle, isOn: $sharingEnabled)
                 if sharingEnabled {
@@ -182,6 +183,7 @@ struct ScreenRecordingCaptureSettings: View {
                 }
             } header: {
                 Text(screenshotStrings.shareSectionTitle)
+            }
             }
         }
         .onAppear { sharing.refresh() }

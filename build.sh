@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Vorssaint
 
-# Builds Vorssaint, assembles the .app bundle, signs it and (with --install)
+# Builds Mihally (an unofficial Intel fork of Vorssaint), assembles the .app bundle, signs it and (with --install)
 # installs it into /Applications.
 #
 # The bundle is staged in a temporary directory outside ~/Documents: folders synced
@@ -26,7 +26,7 @@ trap cleanup EXIT
 # into the build sweeps like any other ending.
 trap 'exit 1' INT TERM HUP
 
-# Flags: --dev builds the local-only "Vorssaint (Developer)" variant (its own
+# Flags: --dev builds the local-only "Mihally (Developer)" variant (its own
 # bundle id, so it coexists with the official app); --install puts it in /Applications.
 DEV=0
 INSTALL=0
@@ -43,16 +43,16 @@ for arg in "$@"; do
 done
 
 if (( DEV )); then
-    APP_NAME="Vorssaint (Developer)"
-    EXECUTABLE="VorssaintDeveloper"
-    APP_BUNDLE_ID="com.vorssaint.utils.dev"
+    APP_NAME="Mihally (Developer)"
+    EXECUTABLE="MihallyDeveloper"
+    APP_BUNDLE_ID="com.eduardodsgns.mihally.dev"
     BUILD_VARIANT_FLAGS=(-D VORSSAINT_DEVELOPMENT)
     APP_OPTIMIZATION_FLAGS=(-Onone)
     BUILD_CONFIGURATION="debug"
 else
-    APP_NAME="Vorssaint"
-    EXECUTABLE="Vorssaint"
-    APP_BUNDLE_ID="com.vorssaint.utils"
+    APP_NAME="Mihally"
+    EXECUTABLE="Mihally"
+    APP_BUNDLE_ID="com.eduardodsgns.mihally"
     BUILD_VARIANT_FLAGS=()
     APP_OPTIMIZATION_FLAGS=(-O)
     BUILD_CONFIGURATION="release"
@@ -62,9 +62,10 @@ FAN_HELPER_ID="$APP_BUNDLE_ID.fan-control"
 # Sources/NowPlayingAdapter. Staged under Contents/Frameworks, signed on its own.
 NOW_PLAYING_ADAPTER_ID="$APP_BUNDLE_ID.now-playing"
 NOW_PLAYING_ADAPTER="libVorssaintNowPlaying.dylib"
-TARGET="arm64-apple-macosx14.0"
+# Mihally targets Intel Macs (the upstream app ships arm64 only).
+TARGET="x86_64-apple-macosx14.0"
 ENTITLEMENTS="Resources/Vorssaint.entitlements"
-LEGACY_IDENTITY="Vorssaint Utils Signing"
+LEGACY_IDENTITY="Mihally Signing"
 
 developer_id_identity() {
     security find-identity -v -p codesigning 2>/dev/null \
@@ -80,8 +81,8 @@ legacy_identity_installed() {
     local probe signed=1
     # A locked keychain still lists its identities but cannot sign with them,
     # and this one is locked after every reboot; unlock it before asking.
-    security unlock-keychain -p vorssaint-signing \
-        "$HOME/Library/Keychains/vorssaint-signing.keychain-db" 2>/dev/null || true
+    security unlock-keychain -p mihally-signing \
+        "$HOME/Library/Keychains/mihally-signing.keychain-db" 2>/dev/null || true
     probe="$(mktemp)"
     cp /bin/echo "$probe"
     /usr/bin/codesign --force --strip-disallowed-xattrs --sign "$LEGACY_IDENTITY" "$probe" \
@@ -632,7 +633,7 @@ mkdir -p "$STAGE/Contents/Frameworks"
 cp "build/$NOW_PLAYING_ADAPTER" "$STAGE/Contents/Frameworks/$NOW_PLAYING_ADAPTER"
 cp Resources/now-playing.pl "$STAGE/Contents/Resources/now-playing.pl"
 cp Resources/agent-prices.json "$STAGE/Contents/Resources/agent-prices.json"
-cp Resources/com.vorssaint.utils.fan-control.plist \
+cp Resources/com.eduardodsgns.mihally.fan-control.plist \
     "$STAGE/Contents/Library/LaunchDaemons/$FAN_HELPER_ID.plist"
 cp Resources/Info.plist "$STAGE/Contents/Info.plist"
 cp CHANGELOG.md "$STAGE/Contents/Resources/CHANGELOG.md"
@@ -649,7 +650,7 @@ if (( DEV )); then
     FAN_PLIST="$STAGE/Contents/Library/LaunchDaemons/$FAN_HELPER_ID.plist"
     /usr/libexec/PlistBuddy -c "Set :Label $FAN_HELPER_ID" "$FAN_PLIST"
     /usr/libexec/PlistBuddy -c "Set :BundleProgram Contents/Library/LaunchServices/$FAN_HELPER_ID" "$FAN_PLIST"
-    /usr/libexec/PlistBuddy -c "Delete :MachServices:com.vorssaint.utils.fan-control" "$FAN_PLIST"
+    /usr/libexec/PlistBuddy -c "Delete :MachServices:com.eduardodsgns.mihally.fan-control" "$FAN_PLIST"
     /usr/libexec/PlistBuddy -c "Add :MachServices:$FAN_HELPER_ID bool true" "$FAN_PLIST"
     # Stamp the source commit + build time so the running dev app shows (in About)
     # exactly which code it was compiled from. Lets you verify it matches HEAD before
@@ -695,7 +696,7 @@ xattr -c -r "$STAGE" 2>/dev/null || true
 #      notarization), the app's entitlements and a secure timestamp. Gives a
 #      stable, team-based designated requirement, so permissions persist across
 #      updates AND Gatekeeper shows no "unverified developer" warning.
-#   2. "Vorssaint Utils Signing" — the legacy stable self-signed identity, kept
+#   2. "Mihally Signing" — the legacy stable self-signed identity, kept
 #      as a fallback so contributors without a Developer ID still get a constant
 #      designated requirement across their local builds.
 #   3. Ad-hoc — fresh clone with no identity at all.
@@ -857,7 +858,7 @@ if (( INSTALL )); then
     stop_process "$EXECUTABLE"
     # Remove the pre-rename apps so two menu bar items never coexist. Same bundle
     # id, so macOS keeps the granted permissions for the new bundle.
-    for legacy in "Vorss:Vorss" "Vorssaint Utils:VorssaintUtils"; do
+    for legacy in; do  # Mihally has no pre-rename bundles to sweep
         name="${legacy%%:*}"; proc="${legacy##*:}"
         if [[ -d "/Applications/$name.app" ]]; then
             stop_process "$proc"

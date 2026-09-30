@@ -1,67 +1,54 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/logo-dark.svg">
-    <img src="docs/assets/readme/logo.svg" width="220" alt="Vorssaint logo">
-  </picture>
+  <img src="docs/assets/readme/icon.png" width="128" alt="Mihally placeholder icon">
 </p>
 
-<h1 align="center">Vorssaint</h1>
+<h1 align="center">Mihally</h1>
 
 <p align="center">
-  One menu bar icon doing the job of a dozen paid Mac apps.<br>
-  Free, open source, and local-first.
+  Port não oficial do <a href="https://github.com/vorssaint/vorssaint-utils">Vorssaint</a> para Macs Intel.<br>
+  Unofficial port of <a href="https://github.com/vorssaint/vorssaint-utils">Vorssaint</a> for Intel Macs.
 </p>
 
-<p align="center">
-  <a href="https://vorssaint.com">Website</a> ·
-  <a href="#install">Install</a> ·
-  <a href="#everything-it-does">Features</a> ·
-  <a href="#private-by-default">Privacy</a> ·
-  <a href="CHANGELOG.md">Changelog</a> ·
-  <a href="mailto:hello@vorssaint.com">Contact</a> ·
-  <a href="https://discord.gg/M6BwWH4BJp">Discord</a>
-</p>
+> **Aviso / Notice.** Mihally é um fork do Vorssaint, compilado para Macs Intel (x86_64). **Não é afiliado, patrocinado nem endossado pelo Vorssaint** ou pelo seu mantenedor. Todo o crédito do app vai ao projeto original: <https://github.com/vorssaint/vorssaint-utils>. Problemas desta versão Intel devem ser relatados [aqui](https://github.com/eduardodsgns/mihally/issues), não no repositório original.
+>
+> Mihally is a fork of Vorssaint built for Intel Macs (x86_64). **It is not affiliated with, sponsored by or endorsed by Vorssaint** or its maintainer. All credit for the app goes to the original project. Report problems with this Intel build [here](https://github.com/eduardodsgns/mihally/issues), not upstream.
 
-<p align="center">
-  <a href="https://github.com/vorssaint/vorssaint-utils/releases"><img src="https://img.shields.io/github/v/release/vorssaint/vorssaint-utils?label=release&color=4c8dff" alt="Latest release"></a>
-  <a href="https://github.com/vorssaint/vorssaint-utils/releases"><img src="https://img.shields.io/github/downloads/vorssaint/vorssaint-utils/total?color=4c8dff" alt="Downloads"></a>
-  <a href="https://github.com/vorssaint/vorssaint-utils/actions/workflows/ci.yml"><img src="https://github.com/vorssaint/vorssaint-utils/actions/workflows/ci.yml/badge.svg?branch=main&event=push" alt="CI status"></a>
-  <a href="#what-you-need"><img src="https://img.shields.io/badge/macOS-14%2B%20Apple%20Silicon-black" alt="macOS 14 and newer, Apple Silicon"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue" alt="License GPL 3.0 or later"></a>
-</p>
+## Português
 
-<p align="center">
-  <a href="https://buymeacoffee.com/vorssaint">
-    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="217" height="60" alt="Buy Me a Coffee">
-  </a>
-</p>
+**O que é.** O mesmo app de barra de menus do Vorssaint (mixer de volume, monitor do sistema, alternador de apps, janelas, histórico da área de transferência, captura de tela e muito mais), com nome, ícone, bundle id (`com.eduardodsgns.mihally`), assinatura e feed de atualização próprios, como a licença de marca do projeto original exige.
 
-<p align="center">
-  For anything private, email
-  <a href="mailto:hello@vorssaint.com"><strong>hello@vorssaint.com</strong></a>.
-</p>
+**Instalar.**
 
-<p align="center">
-  <a href="https://trendshift.io/repositories/53716?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-53716" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/53716" alt="vorssaint/vorssaint-utils | Trendshift" width="250" height="55"></a>
-  <a href="https://trendshift.io/repositories/53716?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-53716" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/53716/weekly?language=Swift" alt="vorssaint/vorssaint-utils | Trendshift weekly ranking" width="250" height="55"></a>
-</p>
+1. Baixe o `Mihally.zip` da [página de releases](https://github.com/eduardodsgns/mihally/releases/latest).
+2. Abra o zip e arraste o `Mihally.app` para a pasta **Aplicativos**.
+3. Abra o Mihally. Como o build é assinado ad-hoc e **não é notarizado pela Apple**, o macOS vai avisar que o desenvolvedor não pôde ser verificado. Vá em **Ajustes do Sistema › Privacidade e Segurança**, role até o aviso sobre o Mihally e clique em **Abrir Mesmo Assim**.
 
-<p align="center">
-  <img src="docs/assets/readme/panel-mixer.png" width="196" alt="Volume mixer with per app sliders, one app boosted past 100 percent">
-  <img src="docs/assets/readme/panel-system.png" width="196" alt="System tab with temperatures, usage graphs and memory pressure">
-  <img src="docs/assets/readme/panel-controls.png" width="196" alt="Window controls with the app switcher and Dock features">
-  <img src="docs/assets/readme/panel-utilities.png" width="196" alt="Utilities with cleaner, Homebrew, media tools and clipboard">
-</p>
+Requer um Mac Intel com macOS 14 Sonoma ou mais novo.
 
-Per app volume, a real system monitor, a better app switcher, window snapping, Dock previews, clipboard history, text snippets, a file shelf, an uninstaller. The utilities Mac users usually buy one by one, together behind a single menu bar icon, with no account, no telemetry and no subscription.
+**O que muda em relação ao original.** Links de doação, Discord, X e site do autor foram escondidos. Links temporários de screenshot/gravação e o envio de feedback usam servidores do autor original e estão desativados. O app avisa quando há versão nova, mas a atualização é manual: o botão abre a página de releases (o instalador automático exige a assinatura Developer ID do autor original). O controle de ventoinha usa um helper que confere essa mesma assinatura, então não deve funcionar neste build.
+
+## English
+
+**What it is.** The same Vorssaint menu bar app (volume mixer, system monitor, app switcher, window tools, clipboard history, screen capture and more), with its own name, icon, bundle id (`com.eduardodsgns.mihally`), signature and update feed, as the original project's trademark policy requires.
+
+**Install.**
+
+1. Download `Mihally.zip` from the [releases page](https://github.com/eduardodsgns/mihally/releases/latest).
+2. Unzip it and drag `Mihally.app` into **Applications**.
+3. Open Mihally. The build is ad-hoc signed and **not notarized by Apple**, so macOS warns that the developer cannot be verified. Go to **System Settings › Privacy & Security**, scroll to the message about Mihally and click **Open Anyway**.
+
+Requires an Intel Mac running macOS 14 Sonoma or newer.
+
+**What differs from upstream.** The author's donation, Discord, X and website links are hidden. Temporary screenshot/recording links and in-app feedback go through the upstream author's servers and are disabled. The app tells you when a new version exists, but updating is manual: the button opens the releases page (the automatic installer requires the upstream author's Developer ID signature). Fan control relies on a helper that checks that same signature, so it is not expected to work in this build.
+
+---
+
+The feature overview below comes from the original project.
 
 ## Install only what you use
 
 Choose individual features or start with a preset. Uninstalled features stop loading and disappear from the interface; reinstalling restores their settings. Setup asks only for the permissions your choices need.
 
-<p align="center">
-  <img src="docs/assets/readme/features-hub.png" width="720" alt="The Features hub in Settings, installing and uninstalling whole features">
-</p>
 
 Reorder or hide panel sections, choose a compact layout, and export settings to another Mac. The app supports more than a dozen languages.
 
@@ -143,8 +130,8 @@ Reorder or hide panel sections, choose a compact layout, and export settings to 
 ### Capture and create
 
 - **Screen capture.** Switch between screenshots, recording, text recognition and color picking in one selector with a pixel magnifier.
-- **Screenshot.** Capture an area, window, screen or scrolling page. Annotate, crop, redact, add backgrounds and watermarks, pin captures, send them through the Share menu or share an expiring link.
-- **Screen recording.** Record with separate system-audio and microphone tracks. Trim, cut, add automatic zooms, blur private details and export video or GIFs, or share an expiring link.
+- **Screenshot.** Capture an area, window, screen or scrolling page. Annotate, crop, redact, add backgrounds and watermarks, pin captures and send them through the Share menu.
+- **Screen recording.** Record with separate system-audio and microphone tracks. Trim, cut, add automatic zooms, blur private details and export video or GIFs.
 - **Camera preview.** Check your camera in a floating mirror or Dynamic Island before a call.
 - **Copy text from screen.** Recognize text offline from any screen area, or read a QR code.
 - **Color picker.** Copy a screen color as HEX, RGB, HSL or SwiftUI code.
@@ -164,29 +151,11 @@ Reorder or hide panel sections, choose a compact layout, and export settings to 
 - **Keep awake.** Keep your Mac working on a timer, with the lid closed, or while selected apps, power or external displays are present.
 - **Displays.** Control individual displays and brightness, with hardware control where supported, half or quarter steps for the brightness keys, optional extra dimming below a monitor's minimum, and software dimming as a fallback.
 - **Extra brightness.** Use a MacBook Pro XDR display's HDR headroom to go beyond its normal maximum brightness.
-- **Bluetooth on sleep.** Disconnect Bluetooth during sleep and restore it on wake only if Vorssaint turned it off.
-
-## Install
-
-With [Homebrew](https://brew.sh):
-
-```sh
-brew install --cask vorssaint
-```
-
-Or grab the disk image from the [releases page](https://github.com/vorssaint/vorssaint-utils/releases) and drag Vorssaint into Applications.
-
-Builds are signed with an Apple Developer ID and notarized, so macOS opens them without a fuss and your permissions survive updates.
+- **Bluetooth on sleep.** Disconnect Bluetooth during sleep and restore it on wake only if Mihally turned it off.
 
 ## Uninstall
 
-With Homebrew:
-
-```sh
-brew uninstall --cask vorssaint
-```
-
-To remove Vorssaint completely, including its settings and permissions:
+To remove Mihally completely, including its settings and permissions:
 
 ```sh
 ./Tools/uninstall.sh
@@ -194,59 +163,36 @@ To remove Vorssaint completely, including its settings and permissions:
 
 ## Private by default
 
-Vorssaint is local-first, with no account, analytics or tracking. The network is touched only by things you can see: update checks, the speed test, Homebrew actions, optional online lyric lookup, temporary screenshot or recording links and feedback you explicitly send. The full story is in the [privacy notes](docs/PRIVACY.md).
-
-Permissions get the same treatment. Every one is optional, the app explains each in plain words, shows which features actually use it, and even tells you when a permission you granted is no longer needed by anything, with a shortcut to revoke it.
-
-<p align="center">
-  <img src="docs/assets/readme/permissions.png" width="720" alt="The Permissions page showing what each permission does, which features use it, and an unused permission warning">
-</p>
+Mihally, like Vorssaint, is local-first, with no account, analytics or tracking. The network is touched only by things you can see: update checks (against this fork's GitHub releases), the speed test, Homebrew actions and optional online lyric lookup. The upstream services for temporary links and feedback are disabled. More in the [privacy notes](docs/PRIVACY.md) (written for the original app).
 
 See the [permissions guide](docs/PERMISSIONS.md) for which features need access and what remains available without it.
 
 ## What you need
 
-- A Mac with Apple Silicon
+- An Intel Mac (x86_64)
 - macOS 14 Sonoma or newer
 
 ### Build it yourself
 
 ```sh
-git clone https://github.com/vorssaint/vorssaint-utils.git
-cd vorssaint-utils
-./build.sh --dev            # build the separate Developer variant
-./build.sh --dev --install  # install and launch it
+git clone https://github.com/eduardodsgns/mihally.git
+cd mihally
+./build.sh --test   # run the test suite
+./build.sh          # build/stage/Mihally.app (x86_64, ad-hoc signed)
 ```
 
-Xcode Command Line Tools are the only requirement. The [contributing guide](CONTRIBUTING.md) covers the layout and conventions. Official builds come only from the maintainer: the GPL covers the source, while the Vorssaint name, icon and look are covered by [TRADEMARKS.md](TRADEMARKS.md), so forks need their own identity.
-
-## When something misbehaves
-
-See [troubleshooting](docs/TROUBLESHOOTING.md) for launch problems, permissions and missing previews, or [support](SUPPORT.md) for help.
+Xcode Command Line Tools are the only requirement.
 
 ## Documentation
 
-- [Privacy](docs/PRIVACY.md), what does and does not leave your Mac
-- [Permissions](docs/PERMISSIONS.md), every macOS permission in plain words
-- [Troubleshooting](docs/TROUBLESHOOTING.md), the common fixes
-- [Contributing](CONTRIBUTING.md), build, layout and conventions
-- [Support](SUPPORT.md), where to get help
-- [Security](SECURITY.md), how to report a vulnerability
+- [Privacy](docs/PRIVACY.md), [Permissions](docs/PERMISSIONS.md), [Troubleshooting](docs/TROUBLESHOOTING.md) and [Contributing](CONTRIBUTING.md) come from the original project and describe Vorssaint; they apply to Mihally except where noted above.
 
-## Community
+## Credits
 
-Vorssaint went from first commit to the front of GitHub trending in three days, top of the Swift charts, and issues and pull requests have shaped every release since. Bug reports, feature ideas and translations are all welcome, starting from the [contributing guide](CONTRIBUTING.md).
-
-Vorssaint is free and will stay that way. If it earned its place in your menu bar, a star helps other people find it, and a [coffee](https://buymeacoffee.com/vorssaint) keeps the maintainer awake, with or without the Keep awake feature.
-
-## Acknowledgements
-
-- App icon designed by [@divisionseven](https://github.com/divisionseven)
+- Original app: [Vorssaint](https://github.com/vorssaint/vorssaint-utils), by its maintainer and contributors.
+- Original app icon designed by [@divisionseven](https://github.com/divisionseven) (not used in Mihally).
+- Mihally: Intel build and rebrand by [@eduardodsgns](https://github.com/eduardodsgns).
 
 ## License
 
-[GPL 3.0 or later](LICENSE), copyright 2026 Vorssaint. The license covers the source code; the Vorssaint name, logo and look are covered separately in [TRADEMARKS.md](TRADEMARKS.md).
-
-<p align="center">
-  <sub>Made by <a href="https://x.com/vorssaint">@vorssaint</a></sub>
-</p>
+[GPL 3.0 or later](LICENSE), copyright 2026 Vorssaint; modifications in this fork are released under the same license. The Vorssaint name, logo and look are covered by [TRADEMARKS.md](TRADEMARKS.md) and are not used by Mihally.

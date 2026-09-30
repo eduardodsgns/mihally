@@ -314,7 +314,7 @@ struct NotchView: View {
                     if showsDetail {
                         NotchIconButton(symbol: "chevron.left", title: l10n.s.obBack, action: service.goBack)
                     }
-                    Text(service.showingAppPanel ? "Vorssaint" : service.selectedMetric.map(detailTitle) ?? text.title)
+                    Text(service.showingAppPanel ? "Mihally" : service.selectedMetric.map(detailTitle) ?? text.title)
                         .font(.system(size: 15, weight: .semibold))
                         .lineLimit(1)
                         .frame(maxWidth: .infinity, alignment: .leading)

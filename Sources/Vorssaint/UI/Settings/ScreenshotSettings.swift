@@ -185,6 +185,7 @@ struct ScreenshotCaptureSettings: View {
                 Text(strings.toolShortcutsTitle)
             }
 
+            if AppInfo.hostedSharingAvailable {
             Section {
                 Toggle(strings.shareEnabledToggle, isOn: $sharingEnabled)
                 if sharingEnabled {
@@ -215,6 +216,7 @@ struct ScreenshotCaptureSettings: View {
                 }
             } header: {
                 Text(strings.shareSectionTitle)
+            }
             }
         }
         .onAppear { sharing.refresh() }

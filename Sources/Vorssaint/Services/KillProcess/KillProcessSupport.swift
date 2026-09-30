@@ -66,7 +66,8 @@ enum KillProcessSupport {
         let lowerPath = path.trimmingCharacters(in: .whitespaces).lowercased()
         let protectedNames: Set<String> = [
             "kernel_task", "launchd", "windowserver", "loginwindow",
-            "vorssaint", "vorssaint (developer)", "vorssaintdeveloper"
+            "vorssaint", "vorssaint (developer)", "vorssaintdeveloper",
+            "mihally", "mihally (developer)", "mihallydeveloper"
         ]
         if protectedNames.contains(lowerName) { return true }
         if lowerPath.hasSuffix("/windowserver") || lowerPath.hasSuffix("/loginwindow") || lowerPath.hasSuffix("/launchd") {

@@ -5,13 +5,29 @@ import Foundation
 
 /// Static identity of the app, shared by UI, notifications and tooling.
 enum AppInfo {
-    static let name = "Vorssaint"
-    static let copyright = "© 2026 Vorssaint"
-    static let websiteURL = URL(string: "https://vorssaint.com")!
-    static let repositoryURL = URL(string: "https://github.com/vorssaint/vorssaint-utils")!
-    static let coffeeURL = URL(string: "https://buymeacoffee.com/vorssaint")!
-    static let discordURL = URL(string: "https://discord.gg/M6BwWH4BJp")!
-    static let socialURL = URL(string: "https://x.com/vorssaint")!
+    static let name = "Mihally"
+    /// Mihally is an unofficial fork of Vorssaint (GPL-3.0-or-later). The
+    /// original copyright stays; the fork is not affiliated with or endorsed by it.
+    static let copyright = "© 2026 Vorssaint · Mihally is an unofficial fork"
+    static let repositoryURL = URL(string: "https://github.com/eduardodsgns/mihally")!
+    static let releasesURL = URL(string: "https://github.com/eduardodsgns/mihally/releases/latest")!
+    static let upstreamURL = URL(string: "https://github.com/vorssaint/vorssaint-utils")!
+    // The upstream author's website, donation, Discord and social links are not
+    // used by this fork; every former entry point to them is hidden.
+    static let websiteURL = repositoryURL
+    static let coffeeURL = repositoryURL
+    static let discordURL = repositoryURL
+    static let socialURL = repositoryURL
+
+    /// Temporary share links for screenshots and recordings, and in-app
+    /// feedback, go through servers run by the upstream author
+    /// (screenshots.vorssaint.com). Mihally does not use them: every entry
+    /// point is hidden while these stay false.
+    static let hostedSharingAvailable = false
+    static let feedbackAvailable = false
+    /// The Support page and the post-update invitation (donate, star, Discord,
+    /// X) point at the upstream author's channels; hidden in Mihally.
+    static let upstreamCommunityLinks = false
 
     /// The bundle version. The fallback only applies to the bare binary
     /// (e.g. `--selftest`), never the shipped app, which reads its Info.plist.

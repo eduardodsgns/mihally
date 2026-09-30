@@ -9,6 +9,9 @@ enum UpdateIntroFlowTests {
     enum AppInfo {
         static var version = "3.4.0"
         static var isBeta: Bool { version.contains("beta") }
+        // Mihally hides the upstream invitation in production; the flow under
+        // test is the one that runs when it is enabled.
+        static var upstreamCommunityLinks = true
     }
     enum UserDefaults { static var standard: Foundation.UserDefaults! }
     enum DispatchQueue {

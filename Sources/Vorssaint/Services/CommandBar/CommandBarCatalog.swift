@@ -755,6 +755,7 @@ enum CommandBarCatalog {
                 }))
         }
         let feedback = FeatureStrings.feedback(language)
+        if AppInfo.feedbackAvailable {
         entries.append(CommandBarEntry(
             id: "action.feedback.bug",
             title: feedback.commandBug,
@@ -767,6 +768,7 @@ enum CommandBarCatalog {
             subtitle: feedback.commandSubtitle,
             icon: .symbol("lightbulb"),
             run: { _ in afterBeat { appDelegate()?.openFeedbackWindow(kind: .feature) } }))
+        }
         entries.append(CommandBarEntry(
             id: "action.restartApp",
             title: String(format: bar.restartAppFormat, AppInfo.name),

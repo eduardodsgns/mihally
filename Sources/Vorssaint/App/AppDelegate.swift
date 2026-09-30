@@ -1665,6 +1665,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate, NSW
     }
 
     func openFeedbackWindow(kind: FeedbackKind = .bug) {
+        // Feedback posts to the upstream author's server; Mihally never sends it.
+        guard AppInfo.feedbackAvailable else { return }
         closePopover()
         let host = NSHostingController(rootView: FeedbackView(initialKind: kind) { [weak self] in
             self?.feedbackWindow?.close()
@@ -2132,6 +2134,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate, NSW
     }
 
     private func showSupportUpdateIntroIfNeeded() -> Bool {
+        // The donation/community invitation belongs to the upstream project.
+        guard AppInfo.upstreamCommunityLinks else { return false }
         // Stable patches share one invitation, even if the first installed
         // version in this release series is a hotfix.
         guard SupportUpdateIntroInfo.shouldShow(

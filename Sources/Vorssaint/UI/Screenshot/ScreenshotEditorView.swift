@@ -769,7 +769,7 @@ struct ScreenshotEditorView: View {
             .screenshotSafeHelp(strings.shareButton)
             .accessibilityLabel(strings.shareButton)
 
-            if sharingEnabled {
+            if AppInfo.hostedSharingAvailable, sharingEnabled {
                 shareMenu
             }
             Divider().frame(height: 16).padding(.horizontal, 3)
