@@ -424,7 +424,10 @@ extension AppFeature {
     var hardwareUnsupportedReason: String? {
         switch self {
         case .fanControl:
-            return FanControlHardware.hasControllableFan
+            // Mihally (Intel fork): a Mac whose fans can only be read (an Intel
+            // host on VirtualSMC's SMCSuperIO) still gets the feature for its
+            // RPM readings; the section itself says control is unavailable.
+            return FanControlHardware.hasControllableFan || SystemMonitor.fanTelemetryAvailable
                 ? nil : FeatureStrings.fanControl(L10n.shared.language).noFans
         default:
             return nil
