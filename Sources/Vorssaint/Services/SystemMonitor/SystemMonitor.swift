@@ -43,6 +43,10 @@ struct SystemSnapshot {
     var cpuUsageReadAt: TimeInterval?
     var cpuCoreUsage: [Double?] = [] // 0...1 per logical core, only while the menu panel shows the CPU row
     var gpuUsage: Double?          // 0...1
+    /// Fan and board power a discrete GPU publishes with its utilization
+    /// (AMD cards on Intel Macs); nil where the accelerator does not.
+    var gpuFanRPM: Double?
+    var gpuPowerWatts: Double?
     var memoryUsed: UInt64?
     var memoryAppUsed: UInt64?
     var memoryTotal: UInt64?
@@ -190,6 +194,8 @@ final class SystemMonitor: ObservableObject {
     private var lastCPUUsageReadAt: TimeInterval?
     private var missedCPUUsageSamples = 0
     private var lastGPUUsage: Double?
+    private var lastGPUFanRPM: Double?
+    private var lastGPUPowerWatts: Double?
     private var missedGPUUsageSamples = 0
     private var memoryCache: CachedMemoryReading?
     private var cpuTemperatureCache: CachedSensorReading?
@@ -826,7 +832,10 @@ final class SystemMonitor: ObservableObject {
                 let suppressGPUForUI = suppressImmediateGPU || now < suppressGPUReadsUntil
                 let shouldSampleGPU = !suppressGPUForUI && take(.gpuUsage)
                 if shouldSampleGPU {
-                    if let rawGPU = Self.readGPUUsage() {
+                    let stats = Self.readAcceleratorStatistics()
+                    self.lastGPUFanRPM = stats?.fanRPM
+                    self.lastGPUPowerWatts = stats?.watts
+                    if let rawGPU = stats?.usage {
                         self.lastGPUUsage = MetricFormat.stabilizedGPUUsage(previous: self.lastGPUUsage,
                                                                             current: rawGPU)
                         self.missedGPUUsageSamples = 0
@@ -838,6 +847,8 @@ final class SystemMonitor: ObservableObject {
                     }
                 }
                 next.gpuUsage = self.lastGPUUsage
+                next.gpuFanRPM = self.lastGPUFanRPM
+                next.gpuPowerWatts = self.lastGPUPowerWatts
             }
             // The anti-glitch bridge must span a couple of sampling gaps or it
             // is useless on the slow background cadence (15 s): one bad SMC
@@ -865,7 +876,8 @@ final class SystemMonitor: ObservableObject {
             if plan.needGPUTemperature {
                 if take(.temperature) {
                     next.gpuTemperature = TemperatureSensorSelector.stabilizedTemperature(
-                        self.maxTemperature(of: self.gpuKeys),
+                        self.maxTemperature(of: self.gpuKeys)
+                            ?? (self.gpuKeys.isEmpty ? Self.readAcceleratorStatistics()?.temperature : nil),
                         cache: &self.gpuTemperatureCache,
                         now: now,
                         maxAge: temperatureBridge,
@@ -1009,10 +1021,10 @@ final class SystemMonitor: ObservableObject {
 
         if needFanSpeed, !fanKeysPrepared {
             fanKeysPrepared = true
-            let count = Self.fanTelemetryCount
-            if count > 0 {
-                let keys = (0..<count).compactMap { client.key(named: "F\($0)Ac") }
-                if keys.count == count { fanKeys = keys }
+            let indices = Self.fanTelemetryIndices
+            if !indices.isEmpty {
+                let keys = indices.compactMap { client.key(named: "F\($0)Ac") }
+                if keys.count == indices.count { fanKeys = keys }
             }
         }
 
@@ -1028,6 +1040,12 @@ final class SystemMonitor: ObservableObject {
             TemperatureSensorSelector.isCPUTemperatureKey($0.name,
                                                           platform: cpuTemperaturePlatform)
         }
+        var intelGPUKeys: [SMCClient.Key] = []
+        if cpuTemperaturePlatform == .intel,
+           let igpu = TemperatureSensorSelector.intelIntegratedGPUKey(in: Set(cpuKeys.map(\.name))) {
+            intelGPUKeys = cpuKeys.filter { $0.name == igpu }
+            cpuKeys.removeAll { $0.name == igpu }
+        }
         preferredCPUKeys = cpuKeys.filter {
             TemperatureSensorSelector.isCPUCoreKey($0.name, platform: cpuTemperaturePlatform)
         }
@@ -1037,23 +1055,31 @@ final class SystemMonitor: ObservableObject {
         // core sensors with no reading at all.
         let preferredNames = Set(preferredCPUKeys.map(\.name))
         fallbackCPUKeys = cpuKeys.filter { !preferredNames.contains($0.name) }
-        gpuKeys = all.filter { $0.name.hasPrefix("Tg") }
+        gpuKeys = all.filter { $0.name.hasPrefix("Tg") } + intelGPUKeys
         batteryKeys = all.filter { $0.name.hasPrefix("TB") }
     }
 
-    static let fanTelemetryCount: Int = {
+    /// The fans worth showing. Apple Silicon fans legitimately idle at 0 RPM,
+    /// so every reported fan counts there; an Intel host (VirtualSMC's
+    /// SMCSuperIO) reports every motherboard fan header, and the ones reading
+    /// 0 at launch have nothing plugged in.
+    static let fanTelemetryIndices: [Int] = {
         guard let client = SMCClient(),
               let countKey = client.key(named: "FNum"),
               let countValue = client.readValue(countKey),
-              let count = FanControlPolicy.fanCount(from: countValue) else { return 0 }
+              let count = FanControlPolicy.fanCount(from: countValue) else { return [] }
         let readings = (0..<count).map { index -> Double? in
             guard let key = client.key(named: "F\(index)Ac") else { return nil }
             return client.readValue(key)
         }
-        guard FanControlPolicy.telemetryReadings(expectedCount: count,
-                                                 readings: readings) != nil else { return 0 }
-        return count
+        guard let speeds = FanControlPolicy.telemetryReadings(expectedCount: count,
+                                                              readings: readings) else { return [] }
+        guard TemperatureSensorSelector.currentPlatform() == .intel else { return Array(0..<count) }
+        let spinning = speeds.indices.filter { speeds[$0] > 0 }
+        return spinning.isEmpty ? Array(0..<count) : spinning
     }()
+
+    static var fanTelemetryCount: Int { fanTelemetryIndices.count }
 
     static var fanTelemetryAvailable: Bool { fanTelemetryCount > 0 }
 
@@ -1138,32 +1164,38 @@ final class SystemMonitor: ObservableObject {
 
     // MARK: - GPU usage
 
-    /// "Device Utilization %" published by the graphics accelerator
-    /// (AGXAccelerator on Apple Silicon).
-    private static func readGPUUsage() -> Double? {
+    struct AcceleratorStatistics {
+        var usage: Double?
+        var temperature: Double?
+        var fanRPM: Double?
+        var watts: Double?
+    }
+
+    /// One PerformanceStatistics read of the first accelerator that reports
+    /// utilization. AMD cards on Intel Macs also publish their temperature,
+    /// fan and board power there; Apple Silicon publishes only utilization.
+    private static func readAcceleratorStatistics() -> AcceleratorStatistics? {
         var iterator = io_iterator_t()
         guard IOServiceGetMatchingServices(kIOMainPortDefault,
                                            IOServiceMatching("IOAccelerator"),
                                            &iterator) == kIOReturnSuccess else { return nil }
         defer { IOObjectRelease(iterator) }
-
-        // The advance lives in the `while` condition so the `defer` only
-        // releases. With the advance inside the defer, returning from the loop
-        // ran it: it released the entry it was done with and then took a
-        // reference on the next service that nothing released. Machines with a
-        // second IOAccelerator (Intel dual graphics, an eGPU) leaked one
-        // io_object_t per sampling tick that way.
         while case let entry = IOIteratorNext(iterator), entry != 0 {
             defer { IOObjectRelease(entry) }
-            // Fetch ONLY PerformanceStatistics, not the whole (large) property
-            // tree. Copying every property each tick is what made continuous GPU
-            // sampling for the menu bar expensive.
             guard let ref = IORegistryEntryCreateCFProperty(entry, "PerformanceStatistics" as CFString,
                                                             kCFAllocatorDefault, 0),
                   let stats = ref.takeRetainedValue() as? [String: Any],
                   let utilization = stats["Device Utilization %"] as? Int
             else { continue }
-            return Double(utilization) / 100.0
+            func number(_ key: String) -> Double? {
+                guard let value = (stats[key] as? NSNumber)?.doubleValue, value.isFinite else { return nil }
+                return value
+            }
+            let temperature = number("Temperature(C)").flatMap { $0 > 1 && $0 < 125 ? $0 : nil }
+            let fan = number("Fan Speed(RPM)").flatMap { $0 > 0 && $0 < 20_000 ? $0 : nil }
+            let watts = number("Total Power(W)").flatMap { $0 > 0 && $0 < 2_000 ? $0 : nil }
+            return AcceleratorStatistics(usage: Double(utilization) / 100.0,
+                                         temperature: temperature, fanRPM: fan, watts: watts)
         }
         return nil
     }

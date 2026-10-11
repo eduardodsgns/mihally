@@ -44,7 +44,7 @@ enum SelfTest {
         }
 
         if let smc = SMCClient() {
-            let keys = smc.keys { $0.hasPrefix("Tp") || $0.hasPrefix("Te") || $0.hasPrefix("Tg") }
+            let keys = smc.keys { $0.hasPrefix("Tp") || $0.hasPrefix("Te") || $0.hasPrefix("Tg") || $0.hasPrefix("TC") }
             if keys.isEmpty {
                 warnings.append("no SMC temperature keys")
             } else if keys.compactMap({ smc.readValue($0) }).isEmpty {
@@ -200,11 +200,14 @@ enum SensorDump {
             print("AppleSMC unavailable")
             exit(1)
         }
+        let cpuPlatform = TemperatureSensorSelector.currentPlatform()
         let keys = smc.keys { name in
             name.hasPrefix("Tp") || name.hasPrefix("Te") || name.hasPrefix("Tg")
+                || (cpuPlatform == .intel && name.hasPrefix("TC"))
                 || name.range(of: "^TB[0-9]T$", options: .regularExpression) != nil
         }
-        let cpuPlatform = TemperatureSensorSelector.currentPlatform()
+        let intelGPUKey = cpuPlatform == .intel
+            ? TemperatureSensorSelector.intelIntegratedGPUKey(in: Set(keys.map(\.name))) : nil
         let hasCPUCoreSet = TemperatureSensorSelector.hasCPUCoreSet(platform: cpuPlatform)
         print("component    key   type   °C")
         for key in keys.sorted(by: { $0.name < $1.name }) {
@@ -212,7 +215,7 @@ enum SensorDump {
             let component: String
             if key.name.hasPrefix("TB") {
                 component = "battery"
-            } else if key.name.hasPrefix("Tg") {
+            } else if key.name.hasPrefix("Tg") || key.name == intelGPUKey {
                 component = "gpu"
             } else if hasCPUCoreSet {
                 component = TemperatureSensorSelector.isCPUCoreKey(key.name, platform: cpuPlatform) ? "cpu-core" : "cpu-aux"

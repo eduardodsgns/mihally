@@ -375,10 +375,19 @@ struct MetricDetailView: View {
                 row(l10n.s.systemUptime, SystemSection.uptimeString()),
             ]
         case .gpu:
-            return [
+            var rows = [
                 row(l10n.s.usageSection, snapshot.gpuUsage.map(MetricFormat.percent) ?? l10n.s.networkMeasuring),
                 row(l10n.s.temperatures, snapshot.gpuTemperature.map(formatTemperature) ?? l10n.s.monitorUnavailable),
             ]
+            // Only cards that publish them (AMD on Intel Macs) get these rows.
+            if let rpm = snapshot.gpuFanRPM {
+                let fan = FeatureStrings.fanControl(l10n.language)
+                rows.append(row(fan.menuBarTitle, String(format: fan.rpmFormat, Int(rpm.rounded()))))
+            }
+            if let watts = snapshot.gpuPowerWatts {
+                rows.append(row(l10n.s.powerSection, MetricFormat.watts(watts)))
+            }
+            return rows
         case .memory:
             let metric = MonitorMemoryMetric.current
             let memoryValue = metric.value(in: snapshot)

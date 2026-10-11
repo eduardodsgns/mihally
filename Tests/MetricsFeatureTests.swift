@@ -607,6 +607,30 @@ enum MetricsFeatureTests {
         suite.expect(TemperatureSensorSelector.platform(brandString: "Apple M10") == .unmappedAppleSilicon
                && TemperatureSensorSelector.platform(brandString: "Apple A19 Pro") == .unmappedAppleSilicon,
                "an Apple chip with no verified core map is recognised as its own case")
+        // Mihally (Intel fork): per-core TCxC sensors, from Apple's SMC or VirtualSMC.
+        let intelPlatform = TemperatureSensorSelector.platform(
+            brandString: "12th Gen Intel(R) Core(TM) i7-12700KF")
+        suite.expect(intelPlatform == .intel
+               && TemperatureSensorSelector.platform(brandString: "Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz") == .intel,
+               "an Intel brand string selects the Intel core map")
+        suite.expect(TemperatureSensorSelector.hasCPUCoreSet(platform: .intel)
+               && TemperatureSensorSelector.isCPUCoreKey("TC0C", platform: .intel)
+               && TemperatureSensorSelector.isCPUCoreKey("TCJC", platform: .intel)
+               && !TemperatureSensorSelector.isCPUCoreKey("TC0P", platform: .intel)
+               && !TemperatureSensorSelector.isCPUCoreKey("TC0c", platform: .intel),
+               "Intel cores are TCxC; the package and lowercase twins are not cores")
+        suite.expect(TemperatureSensorSelector.isCPUTemperatureKey("TC0P", platform: .intel)
+               && !TemperatureSensorSelector.isCPUTemperatureKey("TC0P", platform: .appleM1Family),
+               "TC keys count as CPU temperatures only on Intel")
+        suite.expect(TemperatureSensorSelector.intelIntegratedGPUKey(in: ["TC1C", "TC4C", "TCGC"]) == "TCGC"
+               && TemperatureSensorSelector.intelIntegratedGPUKey(in: ["TC1C", "TCGC", "TCHC"]) == nil,
+               "TCGC is the integrated GPU only when no core past it exists")
+        let intelReadings: [(key: String, value: Double)] = [
+            ("TC0C", 33), ("TCEC", 55), ("TC0P", 44), ("TC0E", 44),
+        ]
+        suite.expect(TemperatureSensorSelector.displayedCPUTemperature(readings: intelReadings,
+                                                                       platform: .intel) == 55,
+               "an Intel CPU shows its hottest core")
         let a18Platform = TemperatureSensorSelector.platform(brandString: "Apple A18 Pro")
         suite.expect(a18Platform == .generic,
                "A18 Pro preserves the CPU temperature path available before 3.3.3")
