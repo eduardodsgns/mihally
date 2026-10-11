@@ -12,6 +12,9 @@ enum CPUTemperaturePlatform: Equatable {
     case appleM4ProFamily
     case appleM5Family
     case unmappedAppleSilicon
+    /// Intel CPUs (Mihally's target): per-core `TCxC` keys, as published by
+    /// Apple's own SMC and by VirtualSMC's SMCProcessor on other Intel hosts.
+    case intel
     case generic
 }
 
@@ -79,7 +82,9 @@ enum TemperatureSensorSelector {
         case 3: return .appleM3Family
         case 4: return brand == "Apple M4 Pro" ? .appleM4ProFamily : .appleM4Family
         case 5: return .appleM5Family
-        default: return brand.hasPrefix("Apple ") ? .unmappedAppleSilicon : .generic
+        default:
+            if brand.range(of: "Intel", options: .caseInsensitive) != nil { return .intel }
+            return brand.hasPrefix("Apple ") ? .unmappedAppleSilicon : .generic
         }
     }
 
@@ -116,7 +121,7 @@ enum TemperatureSensorSelector {
     static func hasCPUCoreSet(platform: CPUTemperaturePlatform) -> Bool {
         switch platform {
         case .appleM1Family, .appleM2Family, .appleM3Family, .appleM4Family,
-             .appleM4ProFamily, .appleM5Family:
+             .appleM4ProFamily, .appleM5Family, .intel:
             return true
         case .unmappedAppleSilicon, .generic: return false
         }
@@ -136,14 +141,35 @@ enum TemperatureSensorSelector {
             return appleM4ProCPUCoreKeys.contains(key)
         case .appleM5Family:
             return appleM5CPUCoreKeys.contains(key)
+        case .intel:
+            return isIntelCoreKey(key)
         case .unmappedAppleSilicon, .generic:
             return false
         }
     }
 
+    /// `TC` + one core digit or letter + `C`: TC0C...TC9C, then TCAC onwards
+    /// past ten cores. The lowercase `TCxc` twins repeat the same readings.
+    static func isIntelCoreKey(_ key: String) -> Bool {
+        let chars = Array(key.utf8)
+        guard chars.count == 4, chars[0] == UInt8(ascii: "T"), chars[1] == UInt8(ascii: "C"),
+              chars[3] == UInt8(ascii: "C") else { return false }
+        let index = chars[2]
+        return (UInt8(ascii: "0")...UInt8(ascii: "9")).contains(index)
+            || (UInt8(ascii: "A")...UInt8(ascii: "Z")).contains(index)
+    }
+
+    /// Intel Macs with integrated graphics publish the GPU as `TCGC`, which
+    /// is also the name of core 16 on CPUs with more cores. It is the GPU only
+    /// when no core past it (`TCHC`) exists.
+    static func intelIntegratedGPUKey(in names: Set<String>) -> String? {
+        names.contains("TCGC") && !names.contains("TCHC") ? "TCGC" : nil
+    }
+
     static func isCPUTemperatureKey(_ key: String,
                                     platform: CPUTemperaturePlatform) -> Bool {
         if key.hasPrefix("Tp") || key.hasPrefix("Te") { return true }
+        if platform == .intel { return key.hasPrefix("TC") }
         return platform == .appleM3Family && key.hasPrefix("Tf")
     }
 
