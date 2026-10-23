@@ -360,7 +360,7 @@ extension Strings {
         uninstallerRefusedSystemFormat: "%@ 是 macOS 的一部分，无法卸载。",
         uninstallerRefusedSharedFormat: "%@ 与 macOS 或其他 App 共享文件，因此无法在这里卸载。",
         uninstallerRefusedNestedFormat: "%@ 是另一个 App 的一部分，无法单独卸载。",
-        uninstallerRefusedSelfFormat: "Vorssaint 无法在这里卸载自身。请改用设置 › %@。",
+        uninstallerRefusedSelfFormat: "Mihally 无法在这里卸载自身。请改用设置 › %@。",
         uninstallerRefusedLinkFormat: "%@ 是指向其他位置 App 的链接，无法卸载。",
         uninstallerRefusedUnidentifiedFormat: "无法识别 %@ 是哪个 App，因此无法卸载。",
         uninstallerPickerHiddenNote: "属于 macOS 或来自 Apple 的 App 不会列出。",

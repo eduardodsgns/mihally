@@ -360,7 +360,7 @@ extension Strings {
         uninstallerRefusedSystemFormat: "Impossibile disinstallare %@ perché fa parte di macOS.",
         uninstallerRefusedSharedFormat: "Impossibile disinstallare %@ da qui perché condivide file con macOS o con altre app.",
         uninstallerRefusedNestedFormat: "Impossibile disinstallare %@ separatamente perché fa parte di un’altra app.",
-        uninstallerRefusedSelfFormat: "Vorssaint non può disinstallarsi da qui. Usa invece Impostazioni › %@.",
+        uninstallerRefusedSelfFormat: "Mihally non può disinstallarsi da qui. Usa invece Impostazioni › %@.",
         uninstallerRefusedLinkFormat: "Impossibile disinstallare %@ perché è un collegamento a un’app che si trova altrove.",
         uninstallerRefusedUnidentifiedFormat: "Impossibile disinstallare %@ perché non è possibile capire di quale app si tratti.",
         uninstallerPickerHiddenNote: "Le app che fanno parte di macOS o sono di Apple non compaiono nell’elenco.",

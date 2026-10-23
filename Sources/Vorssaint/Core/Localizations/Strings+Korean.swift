@@ -361,7 +361,7 @@ extension Strings {
         uninstallerRefusedSystemFormat: "%@은(는) macOS의 일부이므로 제거할 수 없습니다.",
         uninstallerRefusedSharedFormat: "%@은(는) macOS 또는 다른 앱과 파일을 공유하므로 여기에서 제거할 수 없습니다.",
         uninstallerRefusedNestedFormat: "%@은(는) 다른 앱의 일부이므로 따로 제거할 수 없습니다.",
-        uninstallerRefusedSelfFormat: "Vorssaint는 여기에서 자신을 제거할 수 없습니다. 대신 설정 › %@에서 제거하세요.",
+        uninstallerRefusedSelfFormat: "Mihally는 여기에서 자신을 제거할 수 없습니다. 대신 설정 › %@에서 제거하세요.",
         uninstallerRefusedLinkFormat: "%@은(는) 다른 위치에 있는 앱을 가리키는 링크이므로 제거할 수 없습니다.",
         uninstallerRefusedUnidentifiedFormat: "%@은(는) 앱으로 식별할 수 없으므로 제거할 수 없습니다.",
         uninstallerPickerHiddenNote: "macOS에 포함된 앱이나 Apple 앱은 목록에 표시되지 않습니다.",

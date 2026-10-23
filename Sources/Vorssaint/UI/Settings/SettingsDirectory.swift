@@ -445,7 +445,7 @@ enum SettingsDirectory {
             ] + (!AppInfo.upstreamCommunityLinks ? [] : [
                 SettingsDirectoryItem(page: .support, title: s.tabSupport, icon: "heart.fill",
                                       keywords: [s.donateButton, s.supportIntroStarButton]),
-            ]),
+            ])),
         ]
     }
 }

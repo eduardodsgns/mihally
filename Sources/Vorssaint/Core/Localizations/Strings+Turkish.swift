@@ -360,7 +360,7 @@ extension Strings {
         uninstallerRefusedSystemFormat: "%@ macOS’un bir parçası olduğu için kaldırılamaz.",
         uninstallerRefusedSharedFormat: "%@ dosyalarını macOS veya başka uygulamalarla paylaştığı için burada kaldırılamaz.",
         uninstallerRefusedNestedFormat: "%@ başka bir uygulamanın parçası olduğu için tek başına kaldırılamaz.",
-        uninstallerRefusedSelfFormat: "Vorssaint kendini buradan kaldıramaz. Bunun yerine Ayarlar › %@ bölümünü kullan.",
+        uninstallerRefusedSelfFormat: "Mihally kendini buradan kaldıramaz. Bunun yerine Ayarlar › %@ bölümünü kullan.",
         uninstallerRefusedLinkFormat: "%@ başka bir yerdeki bir uygulamaya giden bir bağlantı olduğu için kaldırılamaz.",
         uninstallerRefusedUnidentifiedFormat: "%@ bir uygulama olarak tanımlanamadığı için kaldırılamaz.",
         uninstallerPickerHiddenNote: "macOS’un parçası olan veya Apple’a ait uygulamalar listelenmez.",

@@ -361,7 +361,7 @@ extension Strings {
         uninstallerRefusedSystemFormat: "%@ нельзя удалить, так как это часть macOS.",
         uninstallerRefusedSharedFormat: "%@ нельзя удалить здесь, так как его файлы используются совместно с macOS или другими приложениями.",
         uninstallerRefusedNestedFormat: "%@ нельзя удалить отдельно, так как это часть другого приложения.",
-        uninstallerRefusedSelfFormat: "Vorssaint не может удалить себя отсюда. Используйте раздел Настройки › %@.",
+        uninstallerRefusedSelfFormat: "Mihally не может удалить себя отсюда. Используйте раздел Настройки › %@.",
         uninstallerRefusedLinkFormat: "%@ нельзя удалить, так как это ссылка на приложение, которое хранится в другом месте.",
         uninstallerRefusedUnidentifiedFormat: "%@ нельзя удалить, так как не удаётся определить, что это за приложение.",
         uninstallerPickerHiddenNote: "Приложения, которые входят в macOS или выпущены Apple, здесь не показываются.",

@@ -361,7 +361,7 @@ extension Strings {
         uninstallerRefusedSystemFormat: "%@ 是 macOS 的一部分，無法解除安裝。",
         uninstallerRefusedSharedFormat: "%@ 與 macOS 或其他 App 共用檔案，因此無法在這裡解除安裝。",
         uninstallerRefusedNestedFormat: "%@ 是另一個 App 的一部分，無法單獨解除安裝。",
-        uninstallerRefusedSelfFormat: "Vorssaint 無法在這裡解除安裝自己。請改用設定 › %@。",
+        uninstallerRefusedSelfFormat: "Mihally 無法在這裡解除安裝自己。請改用設定 › %@。",
         uninstallerRefusedLinkFormat: "%@ 是指向其他位置 App 的連結，無法解除安裝。",
         uninstallerRefusedUnidentifiedFormat: "無法辨識 %@ 是哪個 App，因此無法解除安裝。",
         uninstallerPickerHiddenNote: "屬於 macOS 或來自 Apple 的 App 不會列出。",

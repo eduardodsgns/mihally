@@ -360,7 +360,7 @@ extension Strings {
         uninstallerRefusedSystemFormat: "%@ nemožno odinštalovať, pretože je súčasťou macOS.",
         uninstallerRefusedSharedFormat: "%@ tu nemožno odinštalovať, pretože zdieľa súbory s macOS alebo inými aplikáciami.",
         uninstallerRefusedNestedFormat: "%@ nemožno odinštalovať samostatne, pretože je súčasťou inej aplikácie.",
-        uninstallerRefusedSelfFormat: "Vorssaint sa tu nemôže odinštalovať sám. Použite namiesto toho Nastavenia › %@.",
+        uninstallerRefusedSelfFormat: "Mihally sa tu nemôže odinštalovať sám. Použite namiesto toho Nastavenia › %@.",
         uninstallerRefusedLinkFormat: "%@ nemožno odinštalovať, pretože je to odkaz na aplikáciu uloženú inde.",
         uninstallerRefusedUnidentifiedFormat: "%@ nemožno odinštalovať, pretože sa nedá určiť, o akú aplikáciu ide.",
         uninstallerPickerHiddenNote: "Aplikácie, ktoré sú súčasťou macOS alebo pochádzajú od Apple, sa tu nezobrazujú.",

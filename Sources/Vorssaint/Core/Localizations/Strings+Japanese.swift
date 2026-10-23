@@ -360,7 +360,7 @@ extension Strings {
         uninstallerRefusedSystemFormat: "%@ は macOS の一部のため、アンインストールできません。",
         uninstallerRefusedSharedFormat: "%@ は macOS やほかのアプリとファイルを共有しているため、ここではアンインストールできません。",
         uninstallerRefusedNestedFormat: "%@ はほかのアプリの一部のため、単独ではアンインストールできません。",
-        uninstallerRefusedSelfFormat: "Vorssaint はここから自分自身をアンインストールできません。代わりに設定 › %@ を使ってください。",
+        uninstallerRefusedSelfFormat: "Mihally はここから自分自身をアンインストールできません。代わりに設定 › %@ を使ってください。",
         uninstallerRefusedLinkFormat: "%@ は別の場所にあるアプリへのリンクのため、アンインストールできません。",
         uninstallerRefusedUnidentifiedFormat: "%@ はアプリとして識別できないため、アンインストールできません。",
         uninstallerPickerHiddenNote: "macOS に含まれるアプリや Apple のアプリはリストに表示されません。",
